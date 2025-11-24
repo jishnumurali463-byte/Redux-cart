@@ -3,10 +3,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { Nav, Container, Navbar, Badge } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import { useSelector } from "react-redux";
+
 
 function Header() {
+  const userWishlist = useSelector(state=>state.wishlistReducer)
+  console.log(userWishlist);
+  
   return (
-    <Navbar expand="lg" className="bg-secondary position-fixed w-100">
+    <Navbar expand="lg" className="bg-secondary position-fixed w-100 z-1">
       <Container>
         <Navbar.Brand>
           <Link to="/" className="text-decoration-none text-light fw-bold">
@@ -22,7 +27,7 @@ function Header() {
             <Link to="/wishlist" className="text-decoration-none text-light fw-bold d-flex align-items-center">
               <FontAwesomeIcon icon={faHeart} className='text-danger me-1'/> 
               WISHLIST 
-              <Badge pill bg="dark" className="ms-1">9</Badge>
+              <Badge pill bg="dark" className="ms-1">{userWishlist?.length}</Badge>
             </Link>
 
             <Link to="/cart" className="text-decoration-none text-light fw-bold ms-md-5 d-flex align-items-center">

@@ -41,6 +41,7 @@ function Cart() {
                     <div className="d-flex">
                       <button className="btn fs-3 fw-bold">-</button>
                       <input style={{width:'50px'}} value={10} className="form-control text-center" readOnly />
+                       <button className="btn fs-3 fw-bold">+</button>
                     </div>
                   </td>
 
