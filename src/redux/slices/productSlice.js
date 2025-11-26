@@ -2,12 +2,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Async action
-export const getAllproducts = createAsyncThunk(
-  'products/getAllproducts',
+export const getAllProducts = createAsyncThunk(
+  'products/getAllProducts',
   async () => {
     const result = await axios.get("https://dummyjson.com/products");
-   sessionStorage.setItem("products", JSON.stringify(result.data.products))
-
+    sessionStorage.setItem("products", JSON.stringify(result.data.products));
     return result.data.products;
   }
 );
@@ -15,28 +14,42 @@ export const getAllproducts = createAsyncThunk(
 const ProductSlice = createSlice({
   name: 'products',
   initialState: {
-    allproducts: [],
+    allProducts: [],
+    dummyAllProducts: [],
     loading: false,
     error: ""
   },
-  reducers: {},
+  reducers: {
+    searchProduct: (state, action) => {
+      state.allProducts = state.dummyAllProducts.filter(item =>
+        item.title.toLowerCase().includes(action.payload.toLowerCase())
+      );
+    }
+  },
 
   extraReducers: (builder) => {
-    builder
-      .addCase(getAllproducts.pending, (state) => {
-        state.loading = true;
-        state.error = "";
-      })
-      .addCase(getAllproducts.fulfilled, (state, action) => {
-        state.allproducts = action.payload;
-        state.loading = false;
-        state.error = "";
-      })
-      .addCase(getAllproducts.rejected, (state) => {
-        state.loading = false;
-        state.error = "Something went wrong! API call failed...";
-      });
+    builder.addCase(getAllProducts.fulfilled, (state, action) => {
+      state.allProducts = action.payload;
+      state.dummyAllProducts = action.payload;
+      state.loading = false;
+      state.error = "";
+    });
+
+    builder.addCase(getAllProducts.pending, (state) => {
+      state.allProducts = [];
+      state.dummyAllProducts = [];
+      state.loading = true;
+      state.error = "";
+    });
+
+    builder.addCase(getAllProducts.rejected, (state) => {
+      state.allProducts = [];
+      state.dummyAllProducts = [];
+      state.loading = false;
+      state.error = "Something went wrong.. API failed";
+    });
   }
 });
 
+export const { searchProduct } = ProductSlice.actions;
 export default ProductSlice.reducer;
